@@ -9,6 +9,7 @@ export ASH_IMAGE_NAME=${ASH_IMAGE_NAME:-"automated-security-helper:local"}
 SOURCE_DIR=""
 OUTPUT_DIR=""
 OUTPUT_DIR_SPECIFIED="NO"
+OUTPUT_FORMAT="text"
 DOCKER_EXTRA_ARGS=""
 ASH_ARGS=""
 NO_BUILD="NO"
@@ -46,6 +47,10 @@ while (("$#")); do
     --debug)
       DEBUG="YES"
       ;;
+    --format)
+      shift
+      OUTPUT_FORMAT="$1"
+      ;;
     --help | -h)
       source "${ASH_ROOT_DIR}/ash-multi" --help
       exit 0
@@ -54,7 +59,7 @@ while (("$#")); do
       source "${ASH_ROOT_DIR}/ash-multi" --version
       exit 0
       ;;
-    --finch | -f)
+    --finch|-f)
       # Show colored deprecation warning from entrypoint script and exit 1
       source "${ASH_ROOT_DIR}/ash-multi" --finch
       exit 1
@@ -118,6 +123,7 @@ else
         --rm \
         -e ACTUAL_SOURCE_DIR="${SOURCE_DIR}" \
         -e ASH_DEBUG=${DEBUG} \
+        -e ASH_OUTPUT_FORMAT=${OUTPUT_FORMAT} \
         ${MOUNT_SOURCE_DIR} \
         ${MOUNT_OUTPUT_DIR} \
         ${ASH_IMAGE_NAME} \
